@@ -7,7 +7,9 @@ function createRouter(db) {
   // API
   router.get('/event', function (req, res, next) {
     db.query(
-      'SELECT * FROM tblSerie',
+      `SELECT sala,tblExamen.nume,tblProfesori.nume,tblProfesori.prenume,dataExamen,ora 
+      FROM tblGED, tblExPr, tblProfesori, tblExamen WHERE tblGED.idExamen = tblExPr.idExamen 
+      AND tblExPr.idProfesori=tblProfesori.idProfesori AND tblExPr.idExamen=tblExamen.idExamen;`,
       [owner, 10*(req.params.page || 0)],
       (error, results) => {
         if (error) {
