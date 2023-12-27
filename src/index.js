@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const events = require('./events');
 
 const connection = mysql.createConnection({
-  host     : '192.168.0.207',
+  host     : '192.168.56.101',
   user     : 'admin',
   password : 'admin',
   database : 'proiectDB',
