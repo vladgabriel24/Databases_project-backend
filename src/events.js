@@ -563,6 +563,57 @@ function createRouter(db) {
     );
   });
 
+  router.delete('/delete-multiple', function (req, res, next) {
+
+    const {Data, Ora, Sala} = req.body;
+
+    db.query(
+      `DELETE FROM
+      tblGED
+      WHERE
+      tblGED.sala IN (?)
+      AND
+      tblGED.dataExamen IN (?)
+      AND
+      tblGED.ora IN (?);`,
+      [Sala, Data, Ora],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(500).json({status: 'error'});
+        } else {
+          res.status(200).json(results);
+        }
+      }
+    );
+  });
+
+  router.delete('/delete', function (req, res, next) {
+
+    const {Data, Ora, Sala} = req.body;
+
+    db.query(
+      `DELETE FROM
+      tblGED
+      WHERE
+      tblGED.sala = ?
+      AND
+      tblGED.dataExamen = ?
+      AND
+      tblGED.ora = ?;`,
+      [Sala, Data, Ora],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(500).json({status: 'error'});
+        } else {
+          res.status(200).json(results);
+        }
+      }
+    );
+  });
+
+
   return router;
 }
 
