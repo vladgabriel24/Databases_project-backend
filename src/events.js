@@ -371,6 +371,198 @@ function createRouter(db) {
     );
   });
 
+  router.post('/edit-tblGED', function (req, res, next) {
+
+    const {target, modifier} = req.body;
+
+    db.query(
+      `UPDATE  
+      tblGED
+      SET
+      tblGED.sala = '${modifier.Sala}',
+      tblGED.dataExamen = '${modifier.Data}',
+      tblGED.ora = '${modifier.Ora}'
+      WHERE 
+      tblGED.sala = '${target.Sala}'
+      AND
+      tblGED.dataExamen = '${target.Data}'
+      AND
+      tblGED.ora = '${target.Ora}';`,
+      [target.Sala, target.Data, target.Ora, modifier.Sala, modifier.Data, modifier.Ora],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(500).json({status: 'error'});
+        } else {
+          res.status(200).json(results);
+        }
+      }
+    );
+  });
+
+  router.post('/info-add', function (req, res, next) {
+
+    const {
+      An, 
+      Disciplina,
+      Durata,
+      Examen,
+      Grupa,
+      Prag,
+      Punctaj,
+      Serie,
+      Specializare,
+      puncte_credit
+    } = req.body;
+
+    console.log(
+      `SELECT
+      *
+      FROM
+      (
+          (
+              SELECT 
+              idDiscipline 
+              FROM 
+              tblDiscipline 
+              WHERE 
+              nume = '${Disciplina}'
+              AND
+              puncteCredit = '${puncte_credit}'
+          ) as Disciplina,
+          (
+              SELECT 
+              idExamen 
+              FROM 
+              tblExamen 
+              WHERE 
+              nume = '${Examen}' 
+              AND 
+              punctaj='${Punctaj}' 
+              AND 
+              prag='${Prag}' 
+              AND 
+              durata='${Durata}'
+          ) as Examen,
+          (
+              SELECT
+              idGrupa
+              FROM
+              tblGrupa
+              WHERE
+              idSerie = (
+                  SELECT
+                  idSerie
+                  FROM
+                  tblSerie
+                  WHERE
+                  denumireSerie = '${Serie}'
+                  AND
+                  specializare = '${Specializare}'
+                  AND
+                  an = '${An}'
+              )
+              AND
+              denumireGrupa = '${Grupa}'
+          ) as Grupa
+      );`
+    );
+
+    db.query(
+      `SELECT
+      *
+      FROM
+      (
+          (
+              SELECT 
+              idDiscipline 
+              FROM 
+              tblDiscipline 
+              WHERE 
+              nume = '${Disciplina}'
+              AND
+              puncteCredit = '${puncte_credit}'
+          ) as Disciplina,
+          (
+              SELECT 
+              idExamen 
+              FROM 
+              tblExamen 
+              WHERE 
+              nume = '${Examen}' 
+              AND 
+              punctaj='${Punctaj}' 
+              AND 
+              prag='${Prag}' 
+              AND 
+              durata='${Durata}'
+          ) as Examen,
+          (
+              SELECT
+              idGrupa
+              FROM
+              tblGrupa
+              WHERE
+              idSerie = (
+                  SELECT
+                  idSerie
+                  FROM
+                  tblSerie
+                  WHERE
+                  denumireSerie = '${Serie}'
+                  AND
+                  specializare = '${Specializare}'
+                  AND
+                  an = '${An}'
+              )
+              AND
+              denumireGrupa = '${Grupa}'
+          ) as Grupa
+      );`,
+      [
+        An, 
+        Disciplina,
+        Durata,
+        Examen,
+        Grupa,
+        Prag,
+        Punctaj,
+        Serie,
+        Specializare,
+        puncte_credit
+      ],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(500).json({status: 'error'});
+        } else {
+          res.status(200).json(results);
+        }
+      }
+    );
+  });
+
+  router.post('/add', function (req, res, next) {
+
+    const {idExamen, idDiscipline, idGrupa, sala, dataExamen, ora} = req.body;
+
+    db.query(
+      `INSERT INTO 
+        tblGED(idExamen, idDiscipline, idGrupa, sala, dataExamen, ora)
+        VALUES
+        (${idExamen},${idDiscipline},${idGrupa},'${sala}','${dataExamen}','${ora}');`,
+      [],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(500).json({status: 'error'});
+        } else {
+          res.status(200).json(results);
+        }
+      }
+    );
+  });
+
   return router;
 }
 
