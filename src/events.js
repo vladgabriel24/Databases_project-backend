@@ -28,6 +28,25 @@ function createRouter(db) {
     );
   });
 
+  router.get('/tblDiscipline', function (req, res, next) {
+    db.query(
+      `SELECT
+        nume, 
+        puncteCredit 
+      FROM 
+        tblDiscipline;`,
+      [owner, 10*(req.params.page || 0)],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(500).json({status: 'error'});
+        } else {
+          res.status(200).json(results);
+        }
+      }
+    );
+  });
+
   router.post('/more-info/disciplina', function (req, res, next) {
 
     const {Examen, Sala, Data, Ora} = req.body;
