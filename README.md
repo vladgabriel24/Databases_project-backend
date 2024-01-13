@@ -18,3 +18,8 @@ For the dev server, navigate to `.\src\index.js` and run `node --watch ".\src\in
 The backend application will automatically reload if you change any of the source files.<br>
 
 The APIs can be accessed at the URL "http://localhost:8080/<API_Path>".
+
+## Further Improvements
+
+1. Optimize the database queries.<br>
+
